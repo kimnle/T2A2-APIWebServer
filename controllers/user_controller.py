@@ -43,5 +43,6 @@ def login_user():
     if user and bcrypt.check_password_hash(user.password, body_data.get("password")):
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=14))
         return {"email": user.email, "is_admin": user.is_admin, "token": token}
+    
     else:
         return {"error": "Invalid email or password"}, 401
