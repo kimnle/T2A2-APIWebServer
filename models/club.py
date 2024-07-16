@@ -2,7 +2,7 @@ from init import db, ma
 from marshmallow import fields
 
 class Club(db.Model):
-    __tablename__ = "club"
+    __tablename__ = "clubs"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
