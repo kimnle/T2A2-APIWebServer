@@ -22,4 +22,7 @@ def create_app():
     from controllers.user_controller import user_bp
     app.register_blueprint(user_bp)
 
+    from controllers.club_controller import club_bp
+    app.register_blueprint(club_bp)
+
     return app
