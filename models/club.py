@@ -12,15 +12,15 @@ class Club(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     user = db.relationship("User", back_populates="club")
-    books = db.relationship("Book", back_populates="clubs")
+    club_books = db.relationship("ClubBook", back_populates="club")
 
 class ClubSchema(ma.Schema):
 
     user = fields.Nested("UserSchema", only=["name"])
-    books = fields.List(fields.Nested("BookSchema", only=["title", "author"]))
+    club_books = fields.List(fields.Nested("ClubBookSchema", exclude=["club"]))
 
     class Meta:
-        fields = ("id", "name", "description", "updated", "user", "books")
+        fields = ("id", "name", "description", "updated", "user", "club_books")
         ordered = True
 
 club_schema = ClubSchema()
