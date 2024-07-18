@@ -10,16 +10,14 @@ class Book(db.Model):
     genre = db.Column(db.String, nullable=False)
     summary = db.Column(db.String, nullable=False)
 
-    club_id = db.Column(db.Integer, db.ForeignKey("clubs.id"), nullable=False)
-
-    clubs = db.relationship("Club", back_populates="books")
+    club_books = db.relationship("ClubBook", back_populates="book", cascade="all, delete")
 
 class BookSchema(ma.Schema):
 
-    clubs = fields.List(fields.Nested("ClubSchema", only=["name"]))
+    club_books = fields.List(fields.Nested("ClubBookSchema", exclude=["book"]))
 
     class Meta:
-        fields = ("id", "title", "author", "genre", "summary", "clubs")
+        fields = ("id", "title", "author", "genre", "summary", "club_books")
         ordered = True
 
 book_schema = BookSchema()

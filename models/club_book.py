@@ -9,13 +9,13 @@ class ClubBook(db.Model):
     club_id = db.Column(db.Integer, db.ForeignKey("clubs.id"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
 
-    club = db.relationship("Club", back_populates="club")
-    book = db.relationship("Book", back_populates="book")
+    club = db.relationship("Club", back_populates="club_books")
+    book = db.relationship("Book", back_populates="club_books")
 
 class ClubBookSchema(ma.Schema):
 
-    club = fields.Listed(fields.Nested("ClubSchema"), only=["name"])
-    book = fields.Listed(fields.Nested("BookSchema"), exclude=["club_book"])
+    club = fields.List(fields.Nested("ClubSchema"), only=["name"])
+    book = fields.List(fields.Nested("BookSchema"), only=["title", "author"])
 
     class Meta:
         fields = ("id", "club", "book")

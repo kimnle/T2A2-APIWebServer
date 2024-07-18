@@ -12,7 +12,7 @@ class Club(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     user = db.relationship("User", back_populates="club")
-    club_books = db.relationship("ClubBook", back_populates="club")
+    club_books = db.relationship("ClubBook", back_populates="club", cascade="all, delete")
 
 class ClubSchema(ma.Schema):
 

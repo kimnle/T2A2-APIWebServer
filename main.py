@@ -27,4 +27,7 @@ def create_app():
     from controllers.club_controller import club_bp
     app.register_blueprint(club_bp)
 
+    from controllers.book_controller import book_bp
+    app.register_blueprint(book_bp)
+
     return app

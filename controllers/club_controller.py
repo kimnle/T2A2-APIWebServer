@@ -48,7 +48,7 @@ def delete_club(club_id):
     if club:
         db.session.delete(club)
         db.session.commit()
-        return {"message": f"{club.name} deleted successfully"}
+        return {"message": f"'{club.name}' book club deleted successfully"}
     else:
         return {"error": f"Club with ID {club_id} not found"}, 404
     

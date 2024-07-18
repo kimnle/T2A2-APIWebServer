@@ -6,6 +6,7 @@ from init import db, bcrypt
 from models.user import User
 from models.club import Club
 from models.book import Book
+from models.club_book import ClubBook
 
 db_commands = Blueprint("db", __name__)
 
@@ -123,20 +124,47 @@ def seed_tables():
             author="J. Courtney Sullivan",
             genre="Fiction",
             summary="On a secluded bluff overlooking the ocean sits a Victorian house, lavender with gingerbread trim, a home that contains a century's worth of secrets. By the time Jane Flanagan discovers the house as a teenager, it has long been abandoned. The place is an irresistible mystery to Jane. There are still clothes in the closets, marbles rolling across the floors, and dishes in the cupboards, even though no one has set foot there in decades. The house becomes a hideaway for Jane, a place to escape her volatile mother. Twenty years later, now a Harvard archivist, she returns home to Maine following a terrible mistake that threatens both her career and her marriage. Jane is horrified to find the Victorian is now barely recognizable. The new owner, Genevieve, a summer person from Beacon Hill, has gutted it, transforming the house into a glossy white monstrosity straight out of a shelter magazine. Strangely, Genevieve is convinced that the house is haunted—perhaps the product of something troubling Genevieve herself has done. She hires Jane to research the history of the place and the women who lived there. The story Jane uncovers—of lovers lost at sea, romantic longing, shattering loss, artistic awakening, historical artifacts stolen and sold, and the long shadow of colonialism—is even older than Maine itself."
-        ),
-        Book(
-            title="The Unwedding",
-            author="Ally Condie",
-            genre="Fiction",
-            summary="Ellery Wainwright is alone at the edge of the world. She and her husband, Luke, were supposed to spend their twentieth wedding anniversary together at the luxurious Resort at Broken Point in Big Sur, California. Where better to celebrate a marriage, a family, and a life together than at one of the most stunning places on earth? But now she's traveling solo. To add insult to injury, there's a wedding at Broken Point scheduled during her stay. Ellery remembers how it felt to be on the cusp of everything new and wonderful, with a loved and certain future glimmering just ahead. Now, she isn't certain of anything except for her love for her kids and her growing realization that this place, though beautiful, is unsettling. When Ellery discovers the body of the groom floating in the pool in the rain, she realizes that she is not the only one whose future is no longer guaranteed. Before the police can reach Broken Point, a mudslide takes out the road to the resort, leaving the guests trapped. When another guest dies, it's clear something horrible is brewing. Everyone at Broken Point has a secret. And everyone has a shadow. Including Ellery."
-        ),
-        Book(
-            title="Long Island Compromise",
-            author="Taffy Brodesser-Akner",
-            genre="Fiction",
-            summary="In 1980, a wealthy businessman named Carl Fletcher is kidnapped from his driveway, brutalized, and held for ransom. He is returned to his wife and kids less than a week later, only slightly the worse, and the family moves on with their lives, resuming their prized places in the saga of the American dream, comforted in the realization that though their money may have been what endangered them, it is also what assured them their safety. But now, nearly forty years later, it's clear that perhaps nobody ever got over anything, after all. Carl has spent the ensuing years secretly seeking closure to the matter of his kidnapping, while his wife, Ruth, has spent her potential protecting her husband's emotional health. Their three grown children aren't doing much better: Nathan's chronic fear won't allow him to advance at his law firm; Beamer, a Hollywood screenwriter, will consume anything—substance, foodstuff, women—in order to numb his own perpetual terror; and Jenny has spent her life so bent on proving that she's not a product of her family's pathology that she has come to define it. As they hover at the delicate precipice of a different kind of survival, they learn that the family fortune has dwindled to just about nothing, and they must face desperate questions about how much their wealth has played a part in both their lives' successes and failures."
         )
     ]
+
+    db.session.add_all(books)
+
+    club_books = [
+        ClubBook(
+            club=clubs[0],
+            book=books[0]
+        ),
+        ClubBook(
+            club=clubs[0],
+            book=books[1]
+        ),
+        ClubBook(
+            club=clubs[1],
+            book=books[2]
+        ),
+        ClubBook(
+            club=clubs[1],
+            book=books[3]
+        ),
+        ClubBook(
+            club=clubs[2],
+            book=books[4]
+        ),
+        ClubBook(
+            club=clubs[2],
+            book=books[5]
+        ),
+        ClubBook(
+            club=clubs[3],
+            book=books[5]
+        ),
+        ClubBook(
+            club=clubs[3],
+            book=books[6]
+        )
+    ]
+
+    db.session.add_all(club_books)
 
     db.session.commit()
 
