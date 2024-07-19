@@ -7,6 +7,7 @@ from models.user import User
 from models.club import Club
 from models.book import Book
 from models.club_book import ClubBook
+from models.review import Review
 
 db_commands = Blueprint("db", __name__)
 
@@ -165,6 +166,57 @@ def seed_tables():
     ]
 
     db.session.add_all(club_books)
+
+    reviews = [
+        Review(
+            rating=4,
+            comment="An evocative elegy for a safe, clean world, PINK SLIME is buoyed by humor and its narrator's resiliency. This unforgettable novel explores the place where love, responsibility, and self-preservation converge, and the beauty and fragility of our most inimate relationships.",
+            user=users[1],
+            book=books[0]
+        ),
+        Review(
+            rating=4,
+            user=users[1],
+            book=books[1]
+        ),
+        Review(
+            rating=3,
+            comment="The pace is insane. The dialogue is insane.",
+            user=users[2],
+            book=books[2]
+        ),
+        Review(
+            rating=3,
+            comment="It's twisted, gorgeously catty, and as Lily Hunter blurbed: brilliantly written in the spirit of Clarice Lispector. You'll read this in one sitting and then pick it up again and again...",
+            user=users[2],
+            book=books[3]
+        ),
+        Review(
+            rating=5,
+            comment="Like many people my age, I was partly raised by Malorie Blackman. She creates worlds you want to carry with you and each story encourages its young readers to ask the important questions in life. Noughts & Crosses is my absolute favourite of her books. I remember devouring each book in the series as they came out in the early 2000s, desperate for the next instalment. Part of the reason it is so enduring is because while it is written for young adults, it is still a brazenly political read. It was my first step to undestanding racism and classism, opening the door for questions that are just starting to form in young minds. It's pacey, romantic, totured and enlightening. What more could a young reader ask for?",
+            user=users[3],
+            book=books[4]
+        ),
+        Review(
+            rating=5,
+            comment="Say Nothing is a masterclass in the art of 'non-fiction novel'. It has all the elements of a great fiction - mesmerising characters, intrigue and plot twists. And it also happens to be true. This is a big book in every sense of the word, about a terrible and tragic war in the United Kingdom that many people today are too young to even remember. I guarantee you will be hooked from beginning to end.",
+            user=users[3],
+            book=books[5]
+        ),
+        Review(
+            rating=4,
+            user=users[4],
+            book=books[5]
+        ),
+        Review(
+            rating=4,
+            comment="It's an entrancing spin on a generational novel and filled with mystery.",
+            user=users[4],
+            book=books[6]
+        )
+    ]
+
+    db.session.add_all(reviews)
 
     db.session.commit()
 

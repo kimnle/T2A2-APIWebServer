@@ -7,7 +7,6 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String)
-    created = db.Column(db.Date)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
@@ -21,7 +20,7 @@ class ReviewSchema(ma.Schema):
     book = fields.Nested("BookSchema", exclude=["reviews"])
 
     class Meta:
-        fields = ("id", "rating", "comment", "created", "user", "book")
+        fields = ("id", "rating", "comment", "user", "book")
         ordered = True
 
 review_schema = ReviewSchema()
