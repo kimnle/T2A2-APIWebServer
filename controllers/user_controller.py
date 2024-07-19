@@ -3,12 +3,27 @@ from datetime import timedelta
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from init import bcrypt, db
-from models.user import User, user_schema
+from models.user import User, user_schema, users_schema
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
+
+@user_bp.route("/", methods=["GET"])
+def get_all_users():
+    stmt = db.select(User)
+    users = db.session.scalars(stmt)
+    return users_schema.dump(users)
+
+@user_bp.route("/<int:user_id>", methods=["GET"])
+def get_one_user(user_id):
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    if user:
+        return user_schema.dump(user)
+    else:
+        return {"error": f"User with ID {user_id} not found"}, 404
 
 @user_bp.route("/register", methods=["POST"])
 def register_user():
@@ -46,3 +61,34 @@ def login_user():
     
     else:
         return {"error": "Invalid email or password"}, 401
+    
+@user_bp.route("/<int:user_id>", methods=["DELETE"])
+@jwt_required()
+def delete_user(user_id):
+    stmt = db.Select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return {"message": f"'{user.name}' user deleted successfully"}
+    else:
+        return {"error": f"User with ID {user_id} not found"}, 404
+    
+@user_bp.route("/<int:user_id>", methods=["PUT", "PATCH"])
+@jwt_required()
+def update_user(user_id):
+    body_data = request.get_json()
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    if user:
+        user.name = body_data.get("name") or user.name
+        user.email = body_data.get("email") or user.email
+        password = body_data.get("password")
+        if password:
+            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        else:
+            user.password
+        db.session.commit()
+        return user_schema.dump(user)
+    else:
+        return {"error": f"User with ID {user_id} not found"}, 404

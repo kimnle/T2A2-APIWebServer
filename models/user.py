@@ -15,8 +15,8 @@ class User(db.Model):
 
 class UserSchema(ma.Schema):
 
-    club = fields.Nested("ClubSchema", exclude=["user"])
-    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["user"]))
+    club = fields.List(fields.Nested("ClubSchema", only=["name"]))
+    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["user", "id", "book.id", "book.club_books"]))
 
     class Meta:
         fields = ("id", "name", "email", "password", "is_admin", "club", "reviews")
