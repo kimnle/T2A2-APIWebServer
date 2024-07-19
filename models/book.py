@@ -11,13 +11,15 @@ class Book(db.Model):
     summary = db.Column(db.String, nullable=False)
 
     club_books = db.relationship("ClubBook", back_populates="book", cascade="all, delete")
+    reviews = db.relationship("Review", back_populates="book", cascade="all, delete")
 
 class BookSchema(ma.Schema):
 
     club_books = fields.List(fields.Nested("ClubBookSchema", exclude=["book"]))
+    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["book"]))
 
     class Meta:
-        fields = ("id", "title", "author", "genre", "summary", "club_books")
+        fields = ("id", "title", "author", "genre", "summary", "club_books", "reviews")
         ordered = True
 
 book_schema = BookSchema()

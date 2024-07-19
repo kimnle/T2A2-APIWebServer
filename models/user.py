@@ -11,13 +11,15 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     club = db.relationship("Club", back_populates="user", cascade="all, delete")
+    reviews = db.relationship("Review", back_populates="user", cascade="all, delete")
 
 class UserSchema(ma.Schema):
 
     club = fields.Nested("ClubSchema", exclude=["user"])
+    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["user"]))
 
     class Meta:
-        fields = ("id", "name", "email", "password", "is_admin", "club")
+        fields = ("id", "name", "email", "password", "is_admin", "club", "reviews")
         ordered = True
 
 user_schema = UserSchema(exclude=["password"])

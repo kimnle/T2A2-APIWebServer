@@ -14,8 +14,8 @@ class ClubBook(db.Model):
 
 class ClubBookSchema(ma.Schema):
 
-    club = fields.List(fields.Nested("ClubSchema"), only=["name"])
-    book = fields.List(fields.Nested("BookSchema"), only=["title", "author"])
+    club = fields.Nested("ClubSchema", only=["name"])
+    book = fields.Nested("BookSchema", only=["title", "author"])
 
     class Meta:
         fields = ("id", "club", "book")
