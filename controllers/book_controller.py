@@ -6,6 +6,21 @@ from models.book import Book, book_schema, books_schema
 
 book_bp = Blueprint("book", __name__, url_prefix="/book")
 
+@book_bp.route("/")
+def get_all_books():
+    stmt = db.select(Book)
+    books = db.session.scalars(stmt)
+    return books_schema.dump(books)
+
+@book_bp.route("/<int:book_id>")
+def get_one_book(book_id):
+    stmt = db.select(Book).filter_by(id=book_id)
+    book = db.session.scalar(stmt)
+    if book:
+        return book_schema.dump(book)
+    else:
+        return {"error": f"Book with ID {book_id} not found"}, 404
+
 @book_bp.route("/", methods=["POST"])
 def create_book():
     body_data = request.get_json()
