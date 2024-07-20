@@ -3,8 +3,12 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.book import Book, book_schema, books_schema
+from controllers.review_controller import review_bp
+from models.club_book import ClubBook, club_book_schema
+from models.club import Club
 
 book_bp = Blueprint("book", __name__, url_prefix="/book")
+book_bp.register_blueprint(review_bp)
 
 @book_bp.route("/")
 def get_all_books():
@@ -64,3 +68,14 @@ def update_book(book_id):
         return book_schema.dump(book)
     else:
         return {"error": f"Book with ID {book_id} not found"}, 404
+    
+@book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["POST"])
+@jwt_required()
+def assign_club_book(book_id, club_id):
+    club_book = ClubBook(
+        book_id=book_id,
+        club_id=club_id
+    )
+    db.session.add(club_book)
+    db.session.commit()
+    return club_book_schema.dump(club_book), 201
