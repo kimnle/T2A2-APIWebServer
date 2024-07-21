@@ -79,3 +79,22 @@ def assign_club_book(book_id, club_id):
     db.session.add(club_book)
     db.session.commit()
     return club_book_schema.dump(club_book), 201
+
+@book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["DELETE"])
+@jwt_required()
+def delete_club_book(book_id, club_id):
+    stmt = db.select(ClubBook).where(ClubBook.book_id == book_id and ClubBook.club_id == club_id)
+    club_book = db.session.scalar(stmt)
+
+    stmt = db.select(Book).filter_by(id=book_id)
+    book = db.session.scalar(stmt)
+
+    stmt = db.select(Club).filter_by(id=club_id)
+    club = db.session.scalar(stmt)
+
+    if club_book:
+        db.session.delete(club_book)
+        db.session.commit()
+        return {"message": f"'{book.title}' book deleted from '{club.name}' successfully"}
+    else:
+        return {"error": f"Book with ID {book_id} is not in club with ID {club.id}"}
