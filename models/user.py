@@ -21,6 +21,10 @@ class UserSchema(ma.Schema):
 
     name = fields.String(required=True, validate=Regexp("^[a-zA-Z ]*$", error="Must be alphabet characters only"))
 
+    email = fields.String(required=True, validate=Regexp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", error="Invalid email format"))
+
+    password = fields.String(required=True, validate=Regexp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", error="Must be minimum eight characters with at least one uppercase letter, one lowercase letter, one number and one special character"))
+
     class Meta:
         fields = ("id", "name", "email", "password", "is_admin", "club", "reviews")
         ordered = True

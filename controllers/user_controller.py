@@ -6,7 +6,7 @@ from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from init import bcrypt, db
-from models.user import User, user_schema, users_schema
+from models.user import User, user_schema, users_schema, UserSchema
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
@@ -28,7 +28,7 @@ def get_one_user(user_id):
 @user_bp.route("/register", methods=["POST"])
 def register_user():
     try:
-        body_data = user_schema.load(request.get_json())
+        body_data = UserSchema().load(request.get_json())
 
         user = User(
             name=body_data.get("name"),
@@ -77,17 +77,15 @@ def delete_user(user_id):
 @user_bp.route("/<int:user_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def update_user(user_id):
-    body_data = user_schema.load(request.get_json(), partial=True)
+    body_data = UserSchema().load(request.get_json(), partial=True)
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
+    password = body_data.get("password")
     if user:
         user.name = body_data.get("name") or user.name
         user.email = body_data.get("email") or user.email
-        password = body_data.get("password")
         if password:
             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
-        else:
-            user.password
         db.session.commit()
         return user_schema.dump(user)
     else:

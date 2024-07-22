@@ -22,6 +22,7 @@ class BookSchema(ma.Schema):
     reviews = fields.List(fields.Nested("ReviewSchema", exclude=["book", "id"]))
 
     author = fields.String(required=True, validate=Regexp("^[a-zA-Z ]*$", error="Must be alphabet characters only"))
+    
     genre = fields.String(required=True, validate=OneOf(VALID_GENRES, error="Must be 'Fiction' or 'Non-fiction'"))
 
     class Meta:
