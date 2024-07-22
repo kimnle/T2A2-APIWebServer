@@ -28,7 +28,7 @@ def get_one_user(user_id):
 @user_bp.route("/register", methods=["POST"])
 def register_user():
     try:
-        body_data = request.get_json()
+        body_data = user_schema.load(request.get_json())
 
         user = User(
             name=body_data.get("name"),
@@ -77,7 +77,7 @@ def delete_user(user_id):
 @user_bp.route("/<int:user_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def update_user(user_id):
-    body_data = request.get_json()
+    body_data = user_schema.load(request.get_json(), partial=True)
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
     if user:

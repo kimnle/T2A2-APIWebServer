@@ -27,7 +27,7 @@ def get_one_book(book_id):
 
 @book_bp.route("/", methods=["POST"])
 def create_book():
-    body_data = request.get_json()
+    body_data = book_schema.load(request.get_json())
 
     book = Book(
         title=body_data.get("title"),
@@ -56,7 +56,7 @@ def delete_book(book_id):
 @book_bp.route("/<int:book_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def update_book(book_id):
-    body_data = request.get_json()
+    body_data = book_schema.load(request.get_json(), partial=True)
     stmt = db.select(Book).filter_by(id=book_id)
     book = db.session.scalar(stmt)
     if book:
