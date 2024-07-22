@@ -1,5 +1,8 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import OneOf
+
+VALID_RATINGS = (1, 2, 3, 4, 5)
 
 class Review(db.Model):
     __tablename__ = "reviews"
@@ -18,6 +21,8 @@ class ReviewSchema(ma.Schema):
 
     user = fields.Nested("UserSchema", only=["name"])
     book = fields.Nested("BookSchema", exclude=["reviews"])
+
+    rating = fields.Integer(required=True, validate=OneOf(VALID_RATINGS, error="Must be between 1 to 5"))
 
     class Meta:
         fields = ("id", "rating", "comment", "user", "book")

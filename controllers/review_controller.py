@@ -10,7 +10,7 @@ review_bp = Blueprint("review", __name__, url_prefix="/<int:book_id>/review")
 @review_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_review(book_id):
-    body_data = request.get_json()
+    body_data = review_schema.load(request.get_json(), partial=True)
     stmt = db.select(Book).filter_by(id=book_id)
     book = db.session.scalar(stmt)
     if book:
