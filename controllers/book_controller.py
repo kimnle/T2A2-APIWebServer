@@ -6,6 +6,7 @@ from models.book import Book, book_schema, books_schema
 from controllers.review_controller import review_bp
 from models.club_book import ClubBook, club_book_schema
 from models.club import Club
+from utils import authorise_as_admin
 
 book_bp = Blueprint("book", __name__, url_prefix="/book")
 book_bp.register_blueprint(review_bp)
@@ -47,6 +48,9 @@ def delete_book(book_id):
     stmt = db.select(Book).filter_by(id=book_id)
     book = db.session.scalar(stmt)
     if book:
+        is_admin = authorise_as_admin()
+        if not is_admin:
+            return {"error": "Not authorised to delete a book"}, 403
         db.session.delete(book)
         db.session.commit()
         return {"message": f"'{book.title}' book deleted successfully"}
@@ -60,6 +64,9 @@ def update_book(book_id):
     stmt = db.select(Book).filter_by(id=book_id)
     book = db.session.scalar(stmt)
     if book:
+        is_admin = authorise_as_admin()
+        if not is_admin:
+            return {"error": "Not authorised to update a book"}, 403
         book.title = body_data.get("title") or book.title
         book.author = body_data.get("author") or book.author
         book.genre = body_data.get("genre") or book.genre
@@ -72,6 +79,8 @@ def update_book(book_id):
 @book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["POST"])
 @jwt_required()
 def assign_club_book(book_id, club_id):
+    if str(club_book.user_id) != get_jwt_identity():
+        return {"error": "Not authorised to assign the book to this book club"}, 403
     club_book = ClubBook(
         book_id=book_id,
         club_id=club_id

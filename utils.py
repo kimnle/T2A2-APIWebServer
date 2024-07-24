@@ -1,4 +1,4 @@
-from flask_jwt_identity import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity
 
 from init import db
 

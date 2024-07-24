@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.club import Club, club_schema, clubs_schema
+from utils import authorise_as_admin
 
 club_bp = Blueprint("club", __name__, url_prefix="/club")
 
@@ -46,6 +47,9 @@ def delete_club(club_id):
     stmt = db.Select(Club).filter_by(id=club_id)
     club = db.session.scalar(stmt)
     if club:
+        is_admin = authorise_as_admin()
+        if not is_admin and str(club.user_id) != get_jwt_identity():
+            return {"error", "Not authorised to delete this club"}, 403
         db.session.delete(club)
         db.session.commit()
         return {"message": f"'{club.name}' book club deleted successfully"}
@@ -58,6 +62,8 @@ def update_club(club_id):
     stmt = db.select(Club).filter_by(id=club_id)
     club = db.session.scalar(stmt)
     if club:
+        if str(club.user_id) != get_jwt_identity():
+            return {"error": "Not authorise to update this club"}, 403
         club.name = body_data.get("name") or club.name
         club.description = body_data.get("description") or club.description
         club.updated = date.today()

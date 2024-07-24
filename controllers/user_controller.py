@@ -7,6 +7,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 from init import bcrypt, db
 from models.user import User, user_schema, users_schema, UserSchema
+from utils import authorise_as_admin
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
@@ -68,6 +69,9 @@ def delete_user(user_id):
     stmt = db.Select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
     if user:
+        is_admin = authorise_as_admin()
+        if not is_admin and str(user_id) != get_jwt_identity():
+            return {"error": "Not authorised to delete this user"}, 403
         db.session.delete(user)
         db.session.commit()
         return {"message": f"'{user.name}' user deleted successfully"}
@@ -82,6 +86,8 @@ def update_user(user_id):
     user = db.session.scalar(stmt)
     password = body_data.get("password")
     if user:
+        if str(user_id) != get_jwt_identity():
+            return {"error": "Not authorised to update this user"}, 403
         user.name = body_data.get("name") or user.name
         user.email = body_data.get("email") or user.email
         if password:
