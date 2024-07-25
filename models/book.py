@@ -19,7 +19,7 @@ class Book(db.Model):
 class BookSchema(ma.Schema):
 
     club_books = fields.List(fields.Nested("ClubBookSchema", exclude=["book", "id"]))
-    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["book", "id"]))
+    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["book"]))
 
     author = fields.String(required=True, validate=Regexp("^[a-zA-Z ]*$", error="Must be alphabet characters only"))
     

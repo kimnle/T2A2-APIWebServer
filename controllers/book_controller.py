@@ -80,13 +80,21 @@ def update_book(book_id):
 @book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["POST"])
 @jwt_required()
 def assign_club_book(book_id, club_id):
-    club_book = ClubBook(
-        book_id=book_id,
-        club_id=club_id
-    )
-    db.session.add(club_book)
-    db.session.commit()
-    return club_book_schema.dump(club_book), 201
+    stmt = db.select(Club).filter_by(id=club_id)
+    club = db.session.scalar(stmt)
+    if club:
+        if str(club.user_id) == get_jwt_identity():
+            club_book = ClubBook(
+                book_id=book_id,
+                club_id=club_id
+            )
+            db.session.add(club_book)
+            db.session.commit()
+            return club_book_schema.dump(club_book), 201
+        else:
+            return {"error": "User is not authorised to assign the book to this club"}, 403
+    else:
+        return {"error": "Club not found"}, 404
 
 @book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["DELETE"])
 @jwt_required()
