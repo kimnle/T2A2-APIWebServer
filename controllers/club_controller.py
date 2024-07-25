@@ -49,7 +49,7 @@ def delete_club(club_id):
     if club:
         is_admin = authorise_as_admin()
         if not is_admin and str(club.user_id) != get_jwt_identity():
-            return {"error", "Not authorised to delete this club"}, 403
+            return {"error", "User is not authorised to delete this club"}, 403
         db.session.delete(club)
         db.session.commit()
         return {"message": f"'{club.name}' book club deleted successfully"}
@@ -63,7 +63,7 @@ def update_club(club_id):
     club = db.session.scalar(stmt)
     if club:
         if str(club.user_id) != get_jwt_identity():
-            return {"error": "Not authorise to update this club"}, 403
+            return {"error": "User is not authorise to update this club"}, 403
         club.name = body_data.get("name") or club.name
         club.description = body_data.get("description") or club.description
         club.updated = date.today()

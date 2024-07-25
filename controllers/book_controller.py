@@ -6,6 +6,7 @@ from models.book import Book, book_schema, books_schema
 from controllers.review_controller import review_bp
 from models.club_book import ClubBook, club_book_schema
 from models.club import Club
+from models.user import User
 from utils import authorise_as_admin
 
 book_bp = Blueprint("book", __name__, url_prefix="/book")
@@ -79,8 +80,6 @@ def update_book(book_id):
 @book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["POST"])
 @jwt_required()
 def assign_club_book(book_id, club_id):
-    if str(club_book.user_id) != get_jwt_identity():
-        return {"error": "Not authorised to assign the book to this book club"}, 403
     club_book = ClubBook(
         book_id=book_id,
         club_id=club_id
@@ -102,6 +101,8 @@ def delete_club_book(book_id, club_id):
     club = db.session.scalar(stmt)
 
     if club_book:
+        if str(club.user_id) != get_jwt_identity():
+            return {"error": "User is not authorised to delete the book from this club"}, 403
         db.session.delete(club_book)
         db.session.commit()
         return {"message": f"'{book.title}' book deleted from '{club.name}' successfully"}
