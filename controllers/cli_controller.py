@@ -23,6 +23,8 @@ def drop_tables():
 
 @db_commands.cli.command("seed")
 def seed_tables():
+
+    # Create a list of User instances
     users = [
         User(
             name="Admin",
@@ -54,35 +56,37 @@ def seed_tables():
 
     db.session.add_all(users)
 
+    # Create a list of Club instances
     clubs = [
         Club(
             name="Tea Time Book Club",
             description="This isn't just any book club. Each month, we are choosing an amazing new book. One of the greatest thrills of my life has been finding new stories that bring me deeper into my own existence, or catapult me into a new world. I can't wait to read with you. Love, Dakota",
             updated=date.today(),
-            user=users[1]
+            user=users[1]   # Dakota Johnson
         ),
         Club(
             name="Library Science",
             description="Library Science will curate books that aren't on the typical bestseller lists in order to better highlight new voices, writers to watch, overlooked, or underrepresented stories - and for greater context, we will occasionally throw in a classic that might better inform contemporary work. We'll cover writers and books from all points of view to reinforce the truth that ALL books are for everyone... and that we often learn the most from the stories that aren't our own. Thanks for being here -- we're so excited to read with you.",
             updated=date.today(),
-            user=users[2]
+            user=users[2]   # Kaia Gerber
         ),
         Club(
             name="Service95 Book Club",
             description="Welcome to the Service95 Book Club. We are thrilled to have a space where we can share with each other the titles that mean the most to us, and together dive into the minds of some of the world's greatest authors. Each month we will discuss a book personally chosen by Dua, representing writing from across the globe. You're invited to read along with us, share your insights, and contribute your recommendations of the titles we should all know about.",
             updated=date.today(),
-            user=users[3]
+            user=users[3]   # Dua Lipa
         ),
         Club(
             name="Reese's Book Club",
             description="Each month, Reese, our founder (and book-lover-in-chief) chooses a book with a woman at the center of the story. There's not a formula to the books we spotlight, and we like it that way. We make our choices thoughtfully and look for ways to deepen our connection to books, authors and ourselves.",
             updated=date.today(),
-            user=users[4]
+            user=users[4]   # Reese Witherspoon
         )
     ]
 
     db.session.add_all(clubs)
 
+    # Create a list of Book instances
     books = [
         Book(
             title="Pink Slime",
@@ -130,89 +134,91 @@ def seed_tables():
 
     db.session.add_all(books)
 
+    # Create a list of Club Book instances
     club_books = [
         ClubBook(
-            club=clubs[0],
-            book=books[0]
+            book=books[0],  # Pink Slime
+            club=clubs[0]   # Tea Time Book Club
         ),
         ClubBook(
-            club=clubs[0],
-            book=books[1]
+            book=books[1],  # We Were the Universe
+            club=clubs[0]   # Tea Time Book Club
         ),
         ClubBook(
-            club=clubs[1],
-            book=books[2]
+            book=books[2],  # JOB
+            club=clubs[1]   # Library Science
         ),
         ClubBook(
-            club=clubs[1],
-            book=books[3]
+            book=books[3],  # Role Play
+            club=clubs[1]   # Library Science
         ),
         ClubBook(
-            club=clubs[2],
-            book=books[4]
+            book=books[4],  # Noughts & Crosses
+            club=clubs[2]   # Service95 Book Club
         ),
         ClubBook(
-            club=clubs[2],
-            book=books[5]
+            book=books[5],  # Say Nothing
+            club=clubs[2]   # Service95 Book Club
         ),
         ClubBook(
-            club=clubs[3],
-            book=books[5]
+            book=books[5],  # Say Nothing
+            club=clubs[3]   # Reese's Book Club
         ),
         ClubBook(
-            club=clubs[3],
-            book=books[6]
+            book=books[6],  # The Cliffs
+            club=clubs[3]   # Reese's Book Club
         )
     ]
 
     db.session.add_all(club_books)
 
+    # Create a list of Review instances
     reviews = [
         Review(
             rating=4,
             comment="An evocative elegy for a safe, clean world, PINK SLIME is buoyed by humor and its narrator's resiliency. This unforgettable novel explores the place where love, responsibility, and self-preservation converge, and the beauty and fragility of our most inimate relationships.",
-            user=users[1],
-            book=books[0]
+            user=users[1],  # Dakota Johnson
+            book=books[0]   # Pink Slime
         ),
         Review(
             rating=4,
-            user=users[1],
-            book=books[1]
+            user=users[1],  # Dakota Johnson
+            book=books[1]   # We Were the Universe
         ),
         Review(
             rating=3,
             comment="The pace is insane. The dialogue is insane.",
-            user=users[2],
-            book=books[2]
+            user=users[2],  # Kaia Gerber
+            book=books[2]   # JOB
         ),
         Review(
             rating=3,
             comment="It's twisted, gorgeously catty, and as Lily Hunter blurbed: brilliantly written in the spirit of Clarice Lispector. You'll read this in one sitting and then pick it up again and again...",
-            user=users[2],
-            book=books[3]
+            user=users[2],  # Kaia Gerber
+            book=books[3]   # Role Play
         ),
         Review(
             rating=5,
             comment="Like many people my age, I was partly raised by Malorie Blackman. She creates worlds you want to carry with you and each story encourages its young readers to ask the important questions in life. Noughts & Crosses is my absolute favourite of her books. I remember devouring each book in the series as they came out in the early 2000s, desperate for the next instalment. Part of the reason it is so enduring is because while it is written for young adults, it is still a brazenly political read. It was my first step to undestanding racism and classism, opening the door for questions that are just starting to form in young minds. It's pacey, romantic, totured and enlightening. What more could a young reader ask for?",
-            user=users[3],
-            book=books[4]
+            user=users[3],  # Dua Lipa
+            book=books[4]   # Noughts & Crosses
         ),
         Review(
             rating=5,
             comment="Say Nothing is a masterclass in the art of 'non-fiction novel'. It has all the elements of a great fiction - mesmerising characters, intrigue and plot twists. And it also happens to be true. This is a big book in every sense of the word, about a terrible and tragic war in the United Kingdom that many people today are too young to even remember. I guarantee you will be hooked from beginning to end.",
-            user=users[3],
-            book=books[5]
+            user=users[3],  # Dua Lipa
+            book=books[5]   # Say Nothing
         ),
         Review(
             rating=4,
-            user=users[4],
-            book=books[5]
+            user=users[4],  # Reese Witherspoon
+            book=books[5]   # Say Nothing
         ),
         Review(
             rating=4,
             comment="It's an entrancing spin on a generational novel and filled with mystery.",
-            user=users[4],
-            book=books[6]
+            user=users[4],  # Reese Witherspoon
+            book=books[6]   # The Cliffs
         )
     ]
 
