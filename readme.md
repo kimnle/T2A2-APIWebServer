@@ -114,9 +114,9 @@ SQLAlchemy is a powerful Python library that bridges the gap between object-orie
 
 ### Functionalities
 
-Model definition: Create Python classes that represent database tables, defining columns, relationships, and other attributes.
+Model definition: Create Python classes that map to database tables, specifying their columns, data types, relationships with other tables, and additional metadata.
 
-Relationship handling: Manage relationships between objects and automatically synchronise changes.
+Relationship handling: Define and manage connections between model objects, ensuring data consistency through automatic synchronisation upon changes to related entities.
 
 ```py
 class User(db.Model):
@@ -132,7 +132,7 @@ class User(db.Model):
     reviews = db.relationship("Review", back_populates="user", cascade="all, delete")
 ```
 
-Querying: Retrieve data from the database using various query methods and filtering options.
+Querying: Retrieve and manipulate data from the database by constructing and executing queries using various criteria, filters, and sorting options.
 
 ```py
 @user_bp.route("/", methods=["GET"])
@@ -143,9 +143,9 @@ def get_all_users():
     return users_schema.dump(users)
 ```
 
-Data modification: Insert, update, and delete objects, with SQLAlchemy handling the corresponding SQL statements.
+Data modification: Create, update, and delete database records through object manipulation, with SQLAlchemy automatically translating changes into appropriate SQL statements.
 
-Error handling: Provide mechanisms for handling database exceptions and errors.
+Error handling: Implement robust mechanisms to intercept, log, and gracefully handle database-related exceptions, providing informative feedback and recovery strategies.
 
 ```py
 @user_bp.route("/register", methods=["POST"])
@@ -179,7 +179,7 @@ def register_user():
 
 ![ERD](/docs/erd.png)
 
-The ERD represents the five relational models for my Flask application.
+The ERD visually depicts the structure of the five relational database tables used in my Flask application.
 
 ### Users
 
@@ -257,7 +257,7 @@ Relations
 
 * One review MUST BE assigned to ONE and ONLY one book.
 
-This ERD was revised during coding as I re-evaluated the relationships between the Book Clubs and Books tables. The ERD below is the idea I submitted for approval which shows Books having a many-to-one relationship with Book Clubs whereas I wanted to show that the same book can be picked by many clubs. This meant that the relationship became many-to-many and I needed a join table (Book Club Books).
+This ERD was revised during coding as I re-evaluated the relationships between the Book Clubs and Books tables. The initial ERD I submitted for approval below showed Books having a many-to-one relationship with Book Clubs. However, I wanted to represent that the same book could be selected by many clubs. This change required a many-to-many relationship, necessitating a join table (Book Club Books).
 
 ![First ERD](/docs/1st-erd.png)
 
@@ -732,8 +732,6 @@ Or an error
 ![POST /book/id/review 404](/docs/post-book-id-review-404.png)
 
 DELETE - /book/int:book_id/review/int:review_id
-
-DELETE - /book/int:book_id
 
 * Deletes a review record from the database from a book by either the user who owns the book club or a user with admin privileges (valid JWT token required)
 
