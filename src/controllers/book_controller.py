@@ -73,7 +73,7 @@ def delete_book(book_id):
         # Check whether the user is an admin
         is_admin = authorise_as_admin()
         if not is_admin:
-            return {"error": "Not authorised to delete a book"}, 403
+            return {"error": "User not authorised to delete a book"}, 403
         
         # Delete and commit to the DB
         db.session.delete(book)
@@ -103,7 +103,7 @@ def update_book(book_id):
         # Check whether the user is an admin
         is_admin = authorise_as_admin()
         if not is_admin:
-            return {"error": "Not authorised to update a book"}, 403
+            return {"error": "User not authorised to update a book"}, 403
         
         # Update the fields
         book.title = body_data.get("title") or book.title
@@ -157,7 +157,7 @@ def assign_club_book(book_id, club_id):
         # Return an error
         return {"error": f"Club with ID {club_id} not found"}, 404
 
-# /book/<id>/<club/<id>
+# /book/<id>/<club/<id> - DELETE a book from a club
 @book_bp.route("/<int:book_id>/club/<int:club_id>", methods=["DELETE"])
 @jwt_required()
 def delete_club_book(book_id, club_id):
@@ -189,4 +189,4 @@ def delete_club_book(book_id, club_id):
     # Else
     else:
         # Return an error
-        return {"error": f"Book with ID {book_id} is not in club with ID {club.id}"}
+        return {"error": f"Book with ID {book_id} is not in club with ID {club.id}"}, 404

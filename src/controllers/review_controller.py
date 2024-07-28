@@ -54,7 +54,7 @@ def delete_review(book_id, review_id):
         # Check whether the user is an admin or owner of the review
         is_admin = authorise_as_admin()
         if not is_admin and str(review.user_id) != get_jwt_identity():
-            return {"error": "User not authorised to delete this review"}
+            return {"error": "User not authorised to delete this review"}, 403
         
         # Delete and commit to DB
         db.session.delete(review)

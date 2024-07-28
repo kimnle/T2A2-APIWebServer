@@ -72,7 +72,7 @@ def delete_club(club_id):
         # Check whether the user is an admin or the owner of the club
         is_admin = authorise_as_admin()
         if not is_admin and str(club.user_id) != get_jwt_identity():
-            return {"error", "User is not authorised to delete this club"}, 403
+            return {"error": "User is not authorised to delete this club"}, 403
         
         # Delete and commit to the DB
         db.session.delete(club)
@@ -88,6 +88,7 @@ def delete_club(club_id):
 
 # /club/<id> - PUT, PATCH/update a club
 @club_bp.route("/<int:club_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 def update_club(club_id):
     # Get the data from the body of the request
     body_data = request.get_json()

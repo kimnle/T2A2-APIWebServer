@@ -11,7 +11,7 @@ from utils import authorise_as_admin
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
-# /user - GET all cards
+# /user - GET all users
 @user_bp.route("/", methods=["GET"])
 def get_all_users():
     # SELECT * FROM users;
@@ -21,7 +21,7 @@ def get_all_users():
     # Return a response
     return users_schema.dump(users)
 
-# /user/<id> - GET a single card
+# /user/<id> - GET a single user
 @user_bp.route("/<int:user_id>", methods=["GET"])
 def get_one_user(user_id):
     # SELECT * FROM users WHERE id=user_id;
